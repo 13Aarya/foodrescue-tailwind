@@ -1,0 +1,4122 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FoodRescue — Turn Surplus Into Impact</title>
+
+    <!-- Tailwind CSS + Typography -->
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+
+            theme: {
+                extend: {
+
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    },
+
+                    animation: {
+                        float: 'float 6s ease-in-out infinite',
+                        pulseSlow: 'pulseSlow 2s ease-in-out infinite',
+                        radar: 'radar 2s linear infinite',
+                        slideUp: 'slideUp .5s ease-out',
+                        shimmer: 'shimmer 2s linear infinite'
+                    },
+
+                    keyframes: {
+
+                        float: {
+                            '0%,100%': {
+                                transform: 'translateY(0)'
+                            },
+                            '50%': {
+                                transform: 'translateY(-12px)'
+                            }
+                        },
+
+                        pulseSlow: {
+                            '0%,100%': {
+                                transform: 'scale(1)',
+                                opacity: '.8'
+                            },
+                            '50%': {
+                                transform: 'scale(1.15)',
+                                opacity: '1'
+                            }
+                        },
+
+                        radar: {
+                            '0%': {
+                                transform: 'scale(.6)',
+                                opacity: '.8'
+                            },
+                            '100%': {
+                                transform: 'scale(2.4)',
+                                opacity: '0'
+                            }
+                        },
+
+                        slideUp: {
+                            '0%': {
+                                transform: 'translateY(20px)',
+                                opacity: '0'
+                            },
+                            '100%': {
+                                transform: 'translateY(0)',
+                                opacity: '1'
+                            }
+                        },
+
+                        shimmer: {
+                            '0%': {
+                                backgroundPosition: '-1000px 0'
+                            },
+                            '100%': {
+                                backgroundPosition: '1000px 0'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            transition:
+                background-color .35s ease,
+                color .35s ease;
+        }
+
+        /* Glass */
+
+        .glass {
+            background: rgba(255, 255, 255, .12);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, .18);
+        }
+
+        .dark-glass {
+            background: rgba(15, 23, 42, .65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, .08);
+        }
+
+        /* Hero Pattern */
+
+        .hero-pattern {
+            background-image:
+                radial-gradient(
+                    circle at 20% 20%,
+                    rgba(255,255,255,.10) 0 2px,
+                    transparent 3px
+                ),
+                radial-gradient(
+                    circle at 80% 70%,
+                    rgba(255,255,255,.08) 0 2px,
+                    transparent 3px
+                );
+            background-size: 42px 42px;
+        }
+
+        /* Cards */
+
+        .card-hover {
+            transition: all .35s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 25px 50px rgba(15, 23, 42, .13);
+        }
+
+        /* Map */
+
+        .map-grid {
+            background-color: #dbeafe;
+
+            background-image:
+                linear-gradient(
+                    rgba(255,255,255,.7) 2px,
+                    transparent 2px
+                ),
+                linear-gradient(
+                    90deg,
+                    rgba(255,255,255,.7) 2px,
+                    transparent 2px
+                );
+
+            background-size: 55px 55px;
+        }
+
+        .dark .map-grid {
+            background-color: #172554;
+        }
+
+        .map-road {
+            position: absolute;
+            height: 8px;
+            background: rgba(255,255,255,.9);
+            border-radius: 999px;
+            transform-origin: left;
+        }
+
+        /* Radar */
+
+        .radar-ring {
+            position: absolute;
+            inset: 0;
+            border: 2px solid rgba(249,115,22,.35);
+            border-radius: 50%;
+            animation: radar 2.5s infinite;
+        }
+
+        /* Scrollbar */
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            scrollbar-width: none;
+        }
+
+        /* Toast */
+
+        #toast {
+            transform: translateY(120px);
+            opacity: 0;
+            transition: all .35s ease;
+        }
+
+        #toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+    </style>
+
+</head>
+
+
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100">
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header
+    class="sticky top-0 z-50
+           bg-white/90 dark:bg-slate-950/90
+           backdrop-blur-xl
+           border-b border-slate-200 dark:border-slate-800">
+
+    <nav class="max-w-7xl mx-auto px-5 lg:px-8">
+
+        <div class="h-20 flex items-center justify-between">
+
+
+            <!-- LOGO -->
+
+            <a href="#"
+               class="flex items-center gap-3">
+
+                <div
+                    class="w-11 h-11 rounded-2xl
+                           bg-gradient-to-br from-orange-500 to-amber-400
+                           flex items-center justify-center
+                           text-white shadow-lg shadow-orange-200/40">
+
+                    <i class="fa-solid fa-utensils"></i>
+
+                </div>
+
+                <div>
+
+                    <h1
+                        class="font-black text-xl tracking-tight">
+
+                        Food<span class="text-orange-500">
+                            Rescue
+                        </span>
+
+                    </h1>
+
+                    <p
+                        class="text-[9px] uppercase tracking-[.22em]
+                               text-slate-400 font-bold">
+
+                        Rescue • Share • Impact
+
+                    </p>
+
+                </div>
+
+            </a>
+
+
+            <!-- DESKTOP NAV -->
+
+            <ul
+                class="hidden lg:flex items-center gap-8
+                       text-sm font-bold">
+
+                <li>
+                    <a href="#discover"
+                       class="hover:text-orange-500 transition">
+                        Discover
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#radar"
+                       class="hover:text-orange-500 transition">
+                        Rescue Radar
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#map"
+                       class="hover:text-orange-500 transition">
+                        Live Map
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#impact"
+                       class="hover:text-orange-500 transition">
+                        My Impact
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#how"
+                       class="hover:text-orange-500 transition">
+                        How It Works
+                    </a>
+                </li>
+
+            </ul>
+
+
+            <!-- ACTIONS -->
+
+            <div class="flex items-center gap-2">
+
+
+                <!-- Notification -->
+
+                <button
+                    onclick="showToast('You have 2 new rescue opportunities!')"
+                    class="relative w-10 h-10 rounded-xl
+                           bg-slate-100 dark:bg-slate-900
+                           hover:text-orange-500 transition">
+
+                    <i class="fa-regular fa-bell"></i>
+
+                    <span
+                        class="absolute top-2 right-2
+                               w-2 h-2 rounded-full
+                               bg-red-500">
+                    </span>
+
+                </button>
+
+
+                <!-- Theme -->
+
+                <button
+                    id="themeToggle"
+                    class="w-10 h-10 rounded-xl
+                           bg-slate-100 dark:bg-slate-900
+                           hover:text-orange-500 transition">
+
+                    <i id="themeIcon"
+                       class="fa-solid fa-moon">
+                    </i>
+
+                </button>
+
+
+                <!-- Profile -->
+
+                <button
+                    class="hidden sm:flex items-center gap-2
+                           ml-2 px-3 py-2 rounded-xl
+                           bg-slate-100 dark:bg-slate-900">
+
+                    <div
+                        class="w-8 h-8 rounded-lg
+                               bg-gradient-to-br
+                               from-orange-400 to-pink-400
+                               flex items-center justify-center
+                               text-white text-xs">
+
+                        <i class="fa-solid fa-user"></i>
+
+                    </div>
+
+                    <span class="text-sm font-bold">
+                        Alex
+                    </span>
+
+                </button>
+
+
+                <!-- Mobile -->
+
+                <button
+                    id="menuBtn"
+                    class="lg:hidden w-10 h-10 rounded-xl
+                           bg-slate-100 dark:bg-slate-900">
+
+                    <i class="fa-solid fa-bars"></i>
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- MOBILE MENU -->
+
+        <div id="mobileMenu"
+             class="hidden pb-5 lg:hidden">
+
+            <div
+                class="flex flex-col gap-4
+                       text-sm font-bold">
+
+                <a href="#discover">
+                    Discover
+                </a>
+
+                <a href="#radar">
+                    Rescue Radar
+                </a>
+
+                <a href="#map">
+                    Live Map
+                </a>
+
+                <a href="#impact">
+                    My Impact
+                </a>
+
+                <a href="#how">
+                    How It Works
+                </a>
+
+                <button
+                    onclick="showToast('Welcome to FoodRescue!')"
+                    class="bg-orange-500 text-white
+                           rounded-xl py-3">
+
+                    Start Rescuing
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+</header>
+
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main>
+
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<section
+    class="relative overflow-hidden
+           bg-gradient-to-br
+           from-orange-600 via-orange-500 to-amber-400
+           text-white hero-pattern">
+
+    <!-- Decorative blobs -->
+
+    <div
+        class="absolute -top-40 -right-40
+               w-[500px] h-[500px]
+               rounded-full bg-yellow-300/20 blur-3xl">
+    </div>
+
+    <div
+        class="absolute -bottom-40 -left-40
+               w-[500px] h-[500px]
+               rounded-full bg-red-500/20 blur-3xl">
+    </div>
+
+
+    <div
+        class="relative max-w-7xl mx-auto
+               px-5 lg:px-8
+               py-20 lg:py-28">
+
+
+        <div
+            class="grid lg:grid-cols-2
+                   gap-14 items-center">
+
+
+            <!-- HERO TEXT -->
+
+            <div class="animate-slideUp">
+
+
+                <div
+                    class="inline-flex items-center gap-2
+                           glass rounded-full
+                           px-4 py-2
+                           text-sm font-bold mb-7">
+
+                    <span
+                        class="w-2 h-2 rounded-full
+                               bg-emerald-300 animate-pulse">
+                    </span>
+
+                    1,284 meals being rescued today
+
+                </div>
+
+
+                <h2
+                    class="text-5xl lg:text-7xl
+                           font-black leading-[.94]
+                           tracking-tight">
+
+                    Turn surplus
+                    <span class="text-yellow-200">
+                        into impact.
+                    </span>
+
+                </h2>
+
+
+                <p
+                    class="mt-7
+                           text-lg lg:text-xl
+                           text-orange-50
+                           max-w-xl
+                           leading-relaxed">
+
+                    FoodRescue connects surplus food
+                    with people, volunteers and NGOs
+                    before good food becomes waste.
+
+                </p>
+
+
+                <!-- CTA -->
+
+                <div
+                    class="mt-9
+                           flex flex-col sm:flex-row
+                           gap-4">
+
+                    <button
+                        onclick="showToast('Opening nearby food rescues...')"
+                        class="px-7 py-4
+                               rounded-2xl
+                               bg-white text-orange-600
+                               font-black
+                               shadow-2xl
+                               hover:-translate-y-1
+                               transition">
+
+                        <i class="fa-solid fa-compass mr-2"></i>
+
+                        Find Food Near Me
+
+                    </button>
+
+
+                    <button
+                        onclick="showToast('Food donation form opened!')"
+                        class="px-7 py-4
+                               rounded-2xl glass
+                               font-black
+                               hover:bg-white/20
+                               transition">
+
+                        <i class="fa-solid fa-hand-holding-heart mr-2"></i>
+
+                        Donate Surplus
+
+                    </button>
+
+                </div>
+
+
+                <!-- MINI TRUST -->
+
+                <div
+                    class="mt-9
+                           flex items-center gap-4">
+
+                    <div class="flex -space-x-3">
+
+                        <div
+                            class="w-10 h-10 rounded-full
+                                   bg-emerald-400
+                                   border-2 border-orange-500
+                                   flex items-center justify-center">
+
+                            <i class="fa-solid fa-user text-xs"></i>
+
+                        </div>
+
+                        <div
+                            class="w-10 h-10 rounded-full
+                                   bg-purple-400
+                                   border-2 border-orange-500
+                                   flex items-center justify-center">
+
+                            <i class="fa-solid fa-user text-xs"></i>
+
+                        </div>
+
+                        <div
+                            class="w-10 h-10 rounded-full
+                                   bg-blue-400
+                                   border-2 border-orange-500
+                                   flex items-center justify-center">
+
+                            <i class="fa-solid fa-user text-xs"></i>
+
+                        </div>
+
+                    </div>
+
+                    <p class="text-sm text-orange-50">
+
+                        Trusted by
+                        <strong>2,500+</strong>
+                        community rescuers
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- HERO DASHBOARD -->
+
+            <div class="relative animate-float">
+
+
+                <div class="glass rounded-[2rem] p-5 shadow-2xl">
+
+                    <div
+                        class="bg-white dark:bg-slate-900
+                               rounded-3xl overflow-hidden
+                               text-slate-800 dark:text-white
+                               shadow-xl">
+
+
+                        <!-- TOP -->
+
+                        <div
+                            class="p-5
+                                   flex items-center
+                                   justify-between
+                                   border-b
+                                   border-slate-100
+                                   dark:border-slate-800">
+
+                            <div>
+
+                                <p
+                                    class="text-xs
+                                           text-slate-400
+                                           font-bold uppercase">
+
+                                    Rescue Dashboard
+
+                                </p>
+
+                                <h3
+                                    class="font-black text-xl">
+
+                                    Good evening, Alex 👋
+
+                                </h3>
+
+                            </div>
+
+
+                            <div
+                                class="w-11 h-11 rounded-xl
+                                       bg-orange-100
+                                       text-orange-500
+                                       flex items-center
+                                       justify-center">
+
+                                <i class="fa-solid fa-seedling"></i>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- RADAR -->
+
+                        <div class="p-5">
+
+                            <div
+                                class="relative h-48
+                                       rounded-3xl
+                                       bg-gradient-to-br
+                                       from-slate-900
+                                       to-slate-800
+                                       overflow-hidden
+                                       flex items-center
+                                       justify-center">
+
+
+                                <div
+                                    class="radar-ring w-24 h-24">
+                                </div>
+
+                                <div
+                                    class="radar-ring w-24 h-24"
+                                    style="animation-delay:.8s">
+                                </div>
+
+                                <div
+                                    class="radar-ring w-24 h-24"
+                                    style="animation-delay:1.6s">
+                                </div>
+
+
+                                <!-- Center -->
+
+                                <div
+                                    class="relative z-10
+                                           w-16 h-16
+                                           rounded-full
+                                           bg-orange-500
+                                           text-white
+                                           flex items-center
+                                           justify-center
+                                           shadow-xl
+                                           shadow-orange-500/40">
+
+                                    <i
+                                        class="fa-solid fa-location-dot text-xl">
+                                    </i>
+
+                                </div>
+
+
+                                <!-- Markers -->
+
+                                <span
+                                    class="absolute top-8 left-16
+                                           w-3 h-3
+                                           rounded-full
+                                           bg-emerald-400
+                                           animate-pulse">
+                                </span>
+
+                                <span
+                                    class="absolute bottom-10 right-20
+                                           w-3 h-3
+                                           rounded-full
+                                           bg-orange-400
+                                           animate-pulse">
+                                </span>
+
+                                <span
+                                    class="absolute top-20 right-12
+                                           w-3 h-3
+                                           rounded-full
+                                           bg-pink-400
+                                           animate-pulse">
+                                </span>
+
+
+                                <div
+                                    class="absolute bottom-4 left-4">
+
+                                    <p
+                                        class="text-xs text-slate-400">
+
+                                        RESCUE RADAR
+
+                                    </p>
+
+                                    <p
+                                        class="font-black">
+
+                                        19 opportunities nearby
+
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Dashboard stats -->
+
+                            <div
+                                class="grid grid-cols-3
+                                       gap-3 mt-4">
+
+                                <div
+                                    class="p-3 rounded-xl
+                                           bg-emerald-50
+                                           dark:bg-emerald-950/40">
+
+                                    <p
+                                        class="text-xs
+                                               text-slate-400">
+
+                                        Available
+
+                                    </p>
+
+                                    <p
+                                        class="font-black
+                                               text-emerald-500">
+
+                                        12
+
+                                    </p>
+
+                                </div>
+
+
+                                <div
+                                    class="p-3 rounded-xl
+                                           bg-orange-50
+                                           dark:bg-orange-950/40">
+
+                                    <p
+                                        class="text-xs
+                                               text-slate-400">
+
+                                        Pickup Soon
+
+                                    </p>
+
+                                    <p
+                                        class="font-black
+                                               text-orange-500">
+
+                                        5
+
+                                    </p>
+
+                                </div>
+
+
+                                <div
+                                    class="p-3 rounded-xl
+                                           bg-red-50
+                                           dark:bg-red-950/40">
+
+                                    <p
+                                        class="text-xs
+                                               text-slate-400">
+
+                                        Expiring
+
+                                    </p>
+
+                                    <p
+                                        class="font-black
+                                               text-red-500">
+
+                                        2
+
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- FLOATING BADGE -->
+
+                <div
+                    class="absolute -bottom-6 -left-5
+                           bg-white dark:bg-slate-900
+                           text-slate-800 dark:text-white
+                           px-5 py-4
+                           rounded-2xl shadow-2xl
+                           flex items-center gap-3">
+
+                    <div
+                        class="w-10 h-10
+                               rounded-xl
+                               bg-orange-100
+                               text-orange-500
+                               flex items-center
+                               justify-center">
+
+                        🔥
+
+                    </div>
+
+                    <div>
+
+                        <p
+                            class="text-xs text-slate-400">
+
+                            Current streak
+
+                        </p>
+
+                        <p class="font-black">
+
+                            7 days 🔥
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     ROLE SELECTOR
+========================================================= -->
+
+<section
+    class="py-10
+           bg-white dark:bg-slate-900
+           border-b
+           border-slate-200 dark:border-slate-800">
+
+    <div class="max-w-5xl mx-auto px-5">
+
+        <div class="text-center">
+
+            <p
+                class="text-sm font-bold
+                       text-slate-400">
+
+                HOW DO YOU WANT TO HELP?
+
+            </p>
+
+            <h2
+                class="text-2xl
+                       font-black mt-2">
+
+                Choose your FoodRescue role
+
+            </h2>
+
+        </div>
+
+
+        <div
+            class="grid grid-cols-3
+                   gap-3 md:gap-5
+                   mt-7">
+
+
+            <button
+                onclick="selectRole('Donor')"
+                class="role-btn
+                       p-5 rounded-2xl
+                       border-2 border-orange-500
+                       bg-orange-50
+                       dark:bg-orange-950/30
+                       transition">
+
+                <div class="text-2xl mb-2">
+                    🍱
+                </div>
+
+                <p class="font-black">
+                    Donor
+                </p>
+
+                <p
+                    class="hidden sm:block
+                           text-xs text-slate-400 mt-1">
+
+                    Share surplus food
+
+                </p>
+
+            </button>
+
+
+            <button
+                onclick="selectRole('Rescuer')"
+                class="role-btn
+                       p-5 rounded-2xl
+                       border-2
+                       border-slate-200
+                       dark:border-slate-700
+                       hover:border-orange-400
+                       transition">
+
+                <div class="text-2xl mb-2">
+                    🤝
+                </div>
+
+                <p class="font-black">
+                    Rescuer
+                </p>
+
+                <p
+                    class="hidden sm:block
+                           text-xs text-slate-400 mt-1">
+
+                    Find & collect food
+
+                </p>
+
+            </button>
+
+
+            <button
+                onclick="selectRole('NGO')"
+                class="role-btn
+                       p-5 rounded-2xl
+                       border-2
+                       border-slate-200
+                       dark:border-slate-700
+                       hover:border-orange-400
+                       transition">
+
+                <div class="text-2xl mb-2">
+                    🏢
+                </div>
+
+                <p class="font-black">
+                    NGO
+                </p>
+
+                <p
+                    class="hidden sm:block
+                           text-xs text-slate-400 mt-1">
+
+                    Coordinate communities
+
+                </p>
+
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     IMPACT STATS
+========================================================= -->
+
+<section class="py-14 bg-slate-50 dark:bg-slate-950">
+
+    <div
+        class="max-w-7xl mx-auto
+               px-5 lg:px-8">
+
+        <div
+            class="grid grid-cols-2
+                   lg:grid-cols-4 gap-5">
+
+
+            <div
+                class="p-7 rounded-3xl
+                       bg-white dark:bg-slate-900
+                       border border-slate-100
+                       dark:border-slate-800
+                       card-hover">
+
+                <div
+                    class="w-12 h-12 rounded-2xl
+                           bg-orange-100
+                           text-orange-500
+                           flex items-center
+                           justify-center mb-5">
+
+                    <i class="fa-solid fa-utensils"></i>
+
+                </div>
+
+                <p
+                    class="text-3xl
+                           font-black counter"
+                    data-target="48000">
+
+                    0
+
+                </p>
+
+                <p
+                    class="text-sm
+                           text-slate-400 mt-1">
+
+                    Meals Rescued
+
+                </p>
+
+            </div>
+
+
+            <div
+                class="p-7 rounded-3xl
+                       bg-white dark:bg-slate-900
+                       border border-slate-100
+                       dark:border-slate-800
+                       card-hover">
+
+                <div
+                    class="w-12 h-12 rounded-2xl
+                           bg-emerald-100
+                           text-emerald-500
+                           flex items-center
+                           justify-center mb-5">
+
+                    <i class="fa-solid fa-recycle"></i>
+
+                </div>
+
+                <p
+                    class="text-3xl font-black">
+
+                    12.6T
+
+                </p>
+
+                <p
+                    class="text-sm
+                           text-slate-400 mt-1">
+
+                    Waste Prevented
+
+                </p>
+
+            </div>
+
+
+            <div
+                class="p-7 rounded-3xl
+                       bg-white dark:bg-slate-900
+                       border border-slate-100
+                       dark:border-slate-800
+                       card-hover">
+
+                <div
+                    class="w-12 h-12 rounded-2xl
+                           bg-blue-100
+                           text-blue-500
+                           flex items-center
+                           justify-center mb-5">
+
+                    <i class="fa-solid fa-building"></i>
+
+                </div>
+
+                <p
+                    class="text-3xl font-black">
+
+                    320+
+
+                </p>
+
+                <p
+                    class="text-sm
+                           text-slate-400 mt-1">
+
+                    Partner Organizations
+
+                </p>
+
+            </div>
+
+
+            <div
+                class="p-7 rounded-3xl
+                       bg-white dark:bg-slate-900
+                       border border-slate-100
+                       dark:border-slate-800
+                       card-hover">
+
+                <div
+                    class="w-12 h-12 rounded-2xl
+                           bg-purple-100
+                           text-purple-500
+                           flex items-center
+                           justify-center mb-5">
+
+                    <i class="fa-solid fa-users"></i>
+
+                </div>
+
+                <p
+                    class="text-3xl font-black">
+
+                    2.5K+
+
+                </p>
+
+                <p
+                    class="text-sm
+                           text-slate-400 mt-1">
+
+                    Active Rescuers
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     RESCUE RADAR
+========================================================= -->
+
+<section
+    id="radar"
+    class="py-24
+           bg-white dark:bg-slate-900">
+
+    <div
+        class="max-w-7xl mx-auto
+               px-5 lg:px-8">
+
+
+        <div
+            class="grid lg:grid-cols-3
+                   gap-7">
+
+
+            <!-- Radar -->
+
+            <div
+                class="lg:col-span-2
+                       p-7 rounded-[2rem]
+                       bg-slate-950
+                       text-white
+                       overflow-hidden
+                       relative">
+
+
+                <div class="relative z-10">
+
+                    <div
+                        class="flex items-center
+                               justify-between">
+
+                        <div>
+
+                            <span
+                                class="text-orange-400
+                                       text-xs font-black
+                                       uppercase tracking-widest">
+
+                                Live intelligence
+
+                            </span>
+
+                            <h2
+                                class="text-3xl
+                                       lg:text-4xl
+                                       font-black mt-2">
+
+                                Rescue Radar
+
+                            </h2>
+
+                        </div>
+
+
+                        <div
+                            class="px-3 py-2
+                                   rounded-xl
+                                   bg-emerald-500/10
+                                   text-emerald-400
+                                   text-xs font-bold">
+
+                            ● LIVE
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Radar visualization -->
+
+                    <div
+                        class="relative
+                               h-72
+                               flex items-center
+                               justify-center">
+
+
+                        <div
+                            class="absolute
+                                   w-40 h-40
+                                   rounded-full
+                                   border
+                                   border-orange-500/30">
+                        </div>
+
+                        <div
+                            class="absolute
+                                   w-72 h-72
+                                   rounded-full
+                                   border
+                                   border-orange-500/20">
+                        </div>
+
+                        <div
+                            class="absolute
+                                   w-96 h-96
+                                   rounded-full
+                                   border
+                                   border-orange-500/10">
+                        </div>
+
+
+                        <div
+                            class="absolute
+                                   w-20 h-20
+                                   rounded-full
+                                   bg-orange-500/20
+                                   animate-pulseSlow">
+                        </div>
+
+
+                        <div
+                            class="relative z-10
+                                   w-20 h-20
+                                   rounded-full
+                                   bg-orange-500
+                                   flex items-center
+                                   justify-center
+                                   shadow-2xl
+                                   shadow-orange-500/40">
+
+                            <i
+                                class="fa-solid
+                                       fa-location-dot
+                                       text-2xl">
+                            </i>
+
+                        </div>
+
+
+                        <!-- Markers -->
+
+                        <div
+                            class="absolute
+                                   top-8 left-[25%]
+                                   text-emerald-400">
+
+                            <i class="fa-solid fa-circle text-xs"></i>
+
+                        </div>
+
+                        <div
+                            class="absolute
+                                   top-20 right-[20%]
+                                   text-orange-400">
+
+                            <i class="fa-solid fa-circle text-xs"></i>
+
+                        </div>
+
+                        <div
+                            class="absolute
+                                   bottom-12 left-[35%]
+                                   text-pink-400">
+
+                            <i class="fa-solid fa-circle text-xs"></i>
+
+                        </div>
+
+                        <div
+                            class="absolute
+                                   bottom-8 right-[35%]
+                                   text-blue-400">
+
+                            <i class="fa-solid fa-circle text-xs"></i>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="grid grid-cols-3
+                               gap-3">
+
+                        <div
+                            class="rounded-2xl
+                                   bg-white/5
+                                   border border-white/10
+                                   p-4">
+
+                            <p
+                                class="text-slate-400
+                                       text-xs">
+
+                                Within 1 km
+
+                            </p>
+
+                            <p
+                                class="text-xl
+                                       font-black mt-1">
+
+                                07
+
+                            </p>
+
+                        </div>
+
+
+                        <div
+                            class="rounded-2xl
+                                   bg-white/5
+                                   border border-white/10
+                                   p-4">
+
+                            <p
+                                class="text-slate-400
+                                       text-xs">
+
+                                Within 3 km
+
+                            </p>
+
+                            <p
+                                class="text-xl
+                                       font-black mt-1">
+
+                                19
+
+                            </p>
+
+                        </div>
+
+
+                        <div
+                            class="rounded-2xl
+                                   bg-white/5
+                                   border border-white/10
+                                   p-4">
+
+                            <p
+                                class="text-slate-400
+                                       text-xs">
+
+                                Rescued today
+
+                            </p>
+
+                            <p
+                                class="text-xl
+                                       font-black mt-1">
+
+                                1,284
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- STREAK -->
+
+            <div
+                class="p-7 rounded-[2rem]
+                       bg-gradient-to-br
+                       from-orange-500
+                       to-amber-400
+                       text-white
+                       relative overflow-hidden">
+
+
+                <div
+                    class="absolute -right-16
+                           -top-16
+                           w-48 h-48
+                           rounded-full
+                           bg-white/10">
+                </div>
+
+
+                <span
+                    class="text-xs font-black
+                           uppercase tracking-widest
+                           text-orange-100">
+
+                    Your journey
+
+                </span>
+
+
+                <h3
+                    class="text-3xl
+                           font-black mt-3">
+
+                    Impact Streak
+
+                </h3>
+
+
+                <div
+                    class="mt-8">
+
+                    <p
+                        class="text-7xl
+                               font-black">
+
+                        7
+
+                    </p>
+
+                    <p
+                        class="text-orange-100
+                               font-bold">
+
+                        days in a row 🔥
+
+                    </p>
+
+                </div>
+
+
+                <!-- Progress -->
+
+                <div class="mt-8">
+
+                    <div
+                        class="flex justify-between
+                               text-xs
+                               text-orange-100 mb-2">
+
+                        <span>
+                            Weekly goal
+                        </span>
+
+                        <span>
+                            5 / 7
+                        </span>
+
+                    </div>
+
+                    <div
+                        class="h-3
+                               rounded-full
+                               bg-white/20
+                               overflow-hidden">
+
+                        <div
+                            class="h-full
+                                   w-[71%]
+                                   rounded-full
+                                   bg-white">
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="mt-9
+                           p-4 rounded-2xl
+                           bg-white/10">
+
+                    <p
+                        class="text-sm
+                               font-bold">
+
+                        🏅 Next badge
+
+                    </p>
+
+                    <p
+                        class="text-orange-100
+                               text-xs mt-1">
+
+                        Rescue 2 more meals
+                        to unlock
+                        <strong>Waste Warrior</strong>
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     LIVE MAP
+========================================================= -->
+
+<section
+    id="map"
+    class="py-24
+           bg-slate-50
+           dark:bg-slate-950">
+
+    <div
+        class="max-w-7xl mx-auto
+               px-5 lg:px-8">
+
+
+        <div
+            class="flex flex-col
+                   md:flex-row
+                   md:items-end
+                   justify-between
+                   gap-5 mb-10">
+
+            <div>
+
+                <span
+                    class="text-orange-500
+                           text-sm font-black
+                           uppercase tracking-widest">
+
+                    Explore your area
+
+                </span>
+
+                <h2
+                    class="text-4xl
+                           font-black mt-3">
+
+                    Live Rescue Map
+
+                </h2>
+
+                <p
+                    class="text-slate-400
+                           mt-3">
+
+                    Discover food rescue opportunities
+                    around your location.
+
+                </p>
+
+            </div>
+
+
+            <button
+                onclick="showToast('Location updated! Showing rescues near you.')"
+                class="px-5 py-3
+                       rounded-xl
+                       bg-orange-500
+                       text-white
+                       font-bold">
+
+                <i class="fa-solid fa-location-crosshairs mr-2"></i>
+
+                Use My Location
+
+            </button>
+
+        </div>
+
+
+        <div
+            class="grid lg:grid-cols-3
+                   gap-6">
+
+
+            <!-- MAP -->
+
+            <div
+                class="lg:col-span-2
+                       h-[500px]
+                       rounded-[2rem]
+                       overflow-hidden
+                       relative
+                       map-grid
+                       border
+                       border-slate-200
+                       dark:border-slate-800">
+
+
+                <!-- Roads -->
+
+                <div
+                    class="map-road w-[70%]
+                           top-[35%] left-[10%]
+                           rotate-[15deg]">
+                </div>
+
+                <div
+                    class="map-road w-[75%]
+                           top-[62%] left-[15%]
+                           rotate-[-10deg]">
+                </div>
+
+                <div
+                    class="map-road w-[60%]
+                           top-[20%] left-[40%]
+                           rotate-[75deg]">
+                </div>
+
+
+                <!-- Location -->
+
+                <div
+                    class="absolute
+                           top-[48%] left-[48%]
+                           -translate-x-1/2
+                           -translate-y-1/2">
+
+                    <div
+                        class="absolute
+                               inset-[-18px]
+                               rounded-full
+                               bg-orange-500/20
+                               animate-pulse">
+                    </div>
+
+                    <div
+                        class="relative
+                               w-12 h-12
+                               rounded-full
+                               bg-orange-500
+                               text-white
+                               flex items-center
+                               justify-center
+                               shadow-xl">
+
+                        <i
+                            class="fa-solid fa-location-dot">
+                        </i>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Pins -->
+
+                <button
+                    onclick="showToast('18 pizza portions available at Bella Italia!')"
+                    class="absolute top-[22%] left-[22%]
+                           w-10 h-10 rounded-full
+                           bg-emerald-500
+                           text-white
+                           shadow-lg
+                           hover:scale-110
+                           transition">
+
+                    <i class="fa-solid fa-utensils text-xs"></i>
+
+                </button>
+
+
+                <button
+                    onclick="showToast('40 meals available at Green Leaf!')"
+                    class="absolute top-[28%] right-[20%]
+                           w-10 h-10 rounded-full
+                           bg-orange-500
+                           text-white
+                           shadow-lg
+                           hover:scale-110
+                           transition">
+
+                    <i class="fa-solid fa-bowl-rice text-xs"></i>
+
+                </button>
+
+
+                <button
+                    onclick="showToast('26 bakery items available nearby!')"
+                    class="absolute bottom-[23%] left-[30%]
+                           w-10 h-10 rounded-full
+                           bg-purple-500
+                           text-white
+                           shadow-lg
+                           hover:scale-110
+                           transition">
+
+                    <i class="fa-solid fa-bread-slice text-xs"></i>
+
+                </button>
+
+
+                <!-- Map Controls -->
+
+                <div
+                    class="absolute top-5 right-5
+                           flex flex-col gap-2">
+
+                    <button
+                        class="w-10 h-10
+                               bg-white dark:bg-slate-900
+                               rounded-xl shadow-lg">
+
+                        +
+
+                    </button>
+
+                    <button
+                        class="w-10 h-10
+                               bg-white dark:bg-slate-900
+                               rounded-xl shadow-lg">
+
+                        −
+
+                    </button>
+
+                </div>
+
+
+                <!-- Legend -->
+
+                <div
+                    class="absolute
+                           bottom-5 left-5
+                           bg-white/90
+                           dark:bg-slate-900/90
+                           backdrop-blur
+                           rounded-2xl
+                           p-4 shadow-lg">
+
+                    <p
+                        class="text-xs font-black
+                               mb-3">
+
+                        MAP LEGEND
+
+                    </p>
+
+                    <div
+                        class="flex gap-4
+                               text-xs">
+
+                        <span>
+                            🟢 Available
+                        </span>
+
+                        <span>
+                            🟠 Pickup Soon
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- MAP LIST -->
+
+            <div
+                class="space-y-4">
+
+
+                <div
+                    class="p-5 rounded-2xl
+                           bg-white
+                           dark:bg-slate-900
+                           border
+                           border-slate-200
+                           dark:border-slate-800
+                           card-hover">
+
+                    <div
+                        class="flex
+                               justify-between
+                               items-start">
+
+                        <div>
+
+                            <span
+                                class="text-xs
+                                       font-black
+                                       text-emerald-500">
+
+                                ● AVAILABLE
+
+                            </span>
+
+                            <h3
+                                class="font-black
+                                       text-lg mt-1">
+
+                                Bella Italia
+
+                            </h3>
+
+                            <p
+                                class="text-xs
+                                       text-slate-400">
+
+                                Pizza • 18 portions
+
+                            </p>
+
+                        </div>
+
+                        <span
+                            class="text-xs
+                                   font-bold
+                                   text-slate-400">
+
+                            0.8 km
+
+                        </span>
+
+                    </div>
+
+
+                    <button
+                        onclick="showToast('Rescue reserved! Pickup instructions sent.')"
+                        class="w-full mt-4
+                               py-3
+                               rounded-xl
+                               bg-orange-500
+                               text-white
+                               font-bold">
+
+                        Reserve
+
+                    </button>
+
+                </div>
+
+
+                <div
+                    class="p-5 rounded-2xl
+                           bg-white
+                           dark:bg-slate-900
+                           border
+                           border-slate-200
+                           dark:border-slate-800
+                           card-hover">
+
+                    <div
+                        class="flex
+                               justify-between
+                               items-start">
+
+                        <div>
+
+                            <span
+                                class="text-xs
+                                       font-black
+                                       text-orange-500">
+
+                                ● PICKUP SOON
+
+                            </span>
+
+                            <h3
+                                class="font-black
+                                       text-lg mt-1">
+
+                                Green Leaf
+
+                            </h3>
+
+                            <p
+                                class="text-xs
+                                       text-slate-400">
+
+                                Rice & Curry • 40 portions
+
+                            </p>
+
+                        </div>
+
+                        <span
+                            class="text-xs
+                                   font-bold
+                                   text-slate-400">
+
+                            1.2 km
+
+                        </span>
+
+                    </div>
+
+
+                    <button
+                        onclick="showToast('Pickup window reserved!')"
+                        class="w-full mt-4
+                               py-3
+                               rounded-xl
+                               bg-orange-500
+                               text-white
+                               font-bold">
+
+                        Reserve
+
+                    </button>
+
+                </div>
+
+
+                <div
+                    class="p-5 rounded-2xl
+                           bg-slate-900
+                           text-white
+                           card-hover">
+
+                    <div
+                        class="flex
+                               items-center gap-3">
+
+                        <div
+                            class="w-11 h-11
+                                   rounded-xl
+                                   bg-orange-500
+                                   flex items-center
+                                   justify-center">
+
+                            <i
+                                class="fa-solid
+                                       fa-route">
+                            </i>
+
+                        </div>
+
+                        <div>
+
+                            <p
+                                class="font-black">
+
+                                Smart Route
+
+                            </p>
+
+                            <p
+                                class="text-xs
+                                       text-slate-400">
+
+                                3 rescues on your route
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <button
+                        onclick="showToast('Smart route optimized!')"
+                        class="w-full mt-4
+                               py-3
+                               rounded-xl
+                               bg-white/10
+                               hover:bg-white/20
+                               font-bold">
+
+                        Optimize Route
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     FOOD DISCOVERY
+========================================================= -->
+
+<section
+    id="discover"
+    class="py-24
+           bg-white
+           dark:bg-slate-900">
+
+    <div
+        class="max-w-7xl mx-auto
+               px-5 lg:px-8">
+
+
+        <div
+            class="flex flex-col
+                   md:flex-row
+                   md:items-end
+                   justify-between
+                   gap-5 mb-10">
+
+            <div>
+
+                <span
+                    class="text-orange-500
+                           text-sm font-black
+                           uppercase tracking-widest">
+
+                    Fresh opportunities
+
+                </span>
+
+                <h2
+                    class="text-4xl
+                           font-black mt-3">
+
+                    Food waiting to be rescued.
+
+                </h2>
+
+            </div>
+
+
+            <button
+                class="font-bold
+                       text-orange-500
+                       hover:underline">
+
+                View all rescues
+                <i class="fa-solid fa-arrow-right ml-2"></i>
+
+            </button>
+
+        </div>
+
+
+        <!-- FILTERS -->
+
+        <div
+            class="flex gap-3
+                   overflow-x-auto
+                   hide-scrollbar mb-8">
+
+            <button
+                class="px-5 py-3
+                       rounded-full
+                       bg-slate-900
+                       text-white
+                       whitespace-nowrap
+                       font-bold">
+
+                All Food
+
+            </button>
+
+            <button
+                class="px-5 py-3
+                       rounded-full
+                       bg-orange-50
+                       dark:bg-orange-950/30
+                       text-orange-500
+                       whitespace-nowrap
+                       font-bold">
+
+                🍱 Meals
+
+            </button>
+
+            <button
+                class="px-5 py-3
+                       rounded-full
+                       bg-slate-100
+                       dark:bg-slate-800
+                       whitespace-nowrap
+                       font-bold">
+
+                🥖 Bakery
+
+            </button>
+
+            <button
+                class="px-5 py-3
+                       rounded-full
+                       bg-slate-100
+                       dark:bg-slate-800
+                       whitespace-nowrap
+                       font-bold">
+
+                🍎 Groceries
+
+            </button>
+
+        </div>
+
+
+        <!-- FOOD CARDS -->
+
+        <div
+            class="grid md:grid-cols-2
+                   lg:grid-cols-3
+                   gap-6">
+
+
+            <!-- CARD -->
+
+            <article
+                class="bg-white
+                       dark:bg-slate-950
+                       rounded-3xl
+                       overflow-hidden
+                       border
+                       border-slate-200
+                       dark:border-slate-800
+                       card-hover">
+
+
+                <div
+                    class="h-52
+                           bg-gradient-to-br
+                           from-orange-300
+                           to-red-400
+                           flex items-center
+                           justify-center
+                           relative">
+
+
+                    <i
+                        class="fa-solid
+                               fa-pizza-slice
+                               text-7xl
+                               text-white/80">
+                    </i>
+
+
+                    <span
+                        class="absolute
+                               top-4 left-4
+                               bg-white/90
+                               px-3 py-1.5
+                               rounded-full
+                               text-xs
+                               font-black
+                               text-emerald-600">
+
+                        ● FRESH
+
+                    </span>
+
+
+                    <button
+                        onclick="toggleHeart(this)"
+                        class="absolute
+                               top-4 right-4
+                               w-10 h-10
+                               bg-white/90
+                               rounded-full
+                               text-slate-500">
+
+                        <i class="fa-regular fa-heart"></i>
+
+                    </button>
+
+                </div>
+
+
+                <div class="p-6">
+
+
+                    <div
+                        class="flex
+                               justify-between
+                               gap-3">
+
+                        <div>
+
+                            <h3
+                                class="text-xl
+                                       font-black">
+
+                                Fresh Pizza Boxes
+
+                            </h3>
+
+                            <p
+                                class="text-sm
+                                       text-slate-400
+                                       mt-1">
+
+                                Bella Italia Café
+
+                            </p>
+
+                        </div>
+
+                        <span
+                            class="font-black
+                                   text-orange-500">
+
+                            FREE
+
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="flex
+                               items-center
+                               gap-4
+                               text-sm
+                               text-slate-400
+                               mt-5">
+
+                        <span>
+                            <i class="fa-solid fa-box mr-1"></i>
+                            18 portions
+                        </span>
+
+                        <span>
+                            <i class="fa-solid fa-location-dot mr-1"></i>
+                            0.8 km
+                        </span>
+
+                    </div>
+
+
+                    <!-- TIMER -->
+
+                    <div
+                        class="mt-5
+                               p-3 rounded-xl
+                               bg-orange-50
+                               dark:bg-orange-950/30">
+
+                        <div
+                            class="flex
+                                   justify-between
+                                   text-xs">
+
+                            <span
+                                class="text-slate-400">
+
+                                Pickup before
+
+                            </span>
+
+                            <span
+                                class="font-black
+                                       text-orange-500
+                                       timer"
+                                data-time="5200">
+
+                                01:26:40
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        onclick="reserveFood(this)"
+                        class="w-full mt-5
+                               py-3.5
+                               rounded-xl
+                               bg-orange-500
+                               text-white
+                               font-black
+                               hover:bg-orange-600
+                               transition">
+
+                        Reserve Food
+
+                    </button>
+
+                </div>
+
+            </article>
+
+
+
+            <!-- CARD 2 -->
+
+            <article
+                class="bg-white
+                       dark:bg-slate-950
+                       rounded-3xl
+                       overflow-hidden
+                       border
+                       border-slate-200
+                       dark:border-slate-800
+                       card-hover">
+
+
+                <div
+                    class="h-52
+                           bg-gradient-to-br
+                           from-emerald-300
+                           to-teal-500
+                           flex items-center
+                           justify-center
+                           relative">
+
+
+                    <i
+                        class="fa-solid
+                               fa-bowl-rice
+                               text-7xl
+                               text-white/80">
+                    </i>
+
+
+                    <span
+                        class="absolute
+                               top-4 left-4
+                               bg-white/90
+                               px-3 py-1.5
+                               rounded-full
+                               text-xs
+                               font-black
+                               text-orange-600">
+
+                        ● PICKUP SOON
+
+                    </span>
+
+
+                    <button
+                        onclick="toggleHeart(this)"
+                        class="absolute
+                               top-4 right-4
+                               w-10 h-10
+                               bg-white/90
+                               rounded-full
+                               text-slate-500">
+
+                        <i class="fa-regular fa-heart"></i>
+
+                    </button>
+
+                </div>
+
+
+                <div class="p-6">
+
+
+                    <div
+                        class="flex
+                               justify-between">
+
+                        <div>
+
+                            <h3
+                                class="text-xl
+                                       font-black">
+
+                                Rice & Curry Meals
+
+                            </h3>
+
+                            <p
+                                class="text-sm
+                                       text-slate-400
+                                       mt-1">
+
+                                Green Leaf Restaurant
+
+                            </p>
+
+                        </div>
+
+                        <span
+                            class="font-black
+                                   text-orange-500">
+
+                            FREE
+
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="flex gap-4
+                               text-sm
+                               text-slate-400
+                               mt-5">
+
+                        <span>
+                            <i class="fa-solid fa-box mr-1"></i>
+                            40 portions
+                        </span>
+
+                        <span>
+                            <i class="fa-solid fa-location-dot mr-1"></i>
+                            1.2 km
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="mt-5
+                               p-3 rounded-xl
+                               bg-amber-50
+                               dark:bg-amber-950/30">
+
+                        <div
+                            class="flex
+                                   justify-between
+                                   text-xs">
+
+                            <span
+                                class="text-slate-400">
+
+                                Pickup before
+
+                            </span>
+
+                            <span
+                                class="font-black
+                                       text-orange-500
+                                       timer"
+                                data-time="2700">
+
+                                00:45:00
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        onclick="reserveFood(this)"
+                        class="w-full mt-5
+                               py-3.5
+                               rounded-xl
+                               bg-orange-500
+                               text-white
+                               font-black">
+
+                        Reserve Food
+
+                    </button>
+
+                </div>
+
+            </article>
+
+
+
+            <!-- CARD 3 -->
+
+            <article
+                class="bg-white
+                       dark:bg-slate-950
+                       rounded-3xl
+                       overflow-hidden
+                       border
+                       border-slate-200
+                       dark:border-slate-800
+                       card-hover">
+
+
+                <div
+                    class="h-52
+                           bg-gradient-to-br
+                           from-yellow-300
+                           to-orange-400
+                           flex items-center
+                           justify-center
+                           relative">
+
+
+                    <i
+                        class="fa-solid
+                               fa-bread-slice
+                               text-7xl
+                               text-white/80">
+                    </i>
+
+
+                    <span
+                        class="absolute
+                               top-4 left-4
+                               bg-white/90
+                               px-3 py-1.5
+                               rounded-full
+                               text-xs
+                               font-black
+                               text-emerald-600">
+
+                        ● FRESH
+
+                    </span>
+
+
+                    <button
+                        onclick="toggleHeart(this)"
+                        class="absolute
+                               top-4 right-4
+                               w-10 h-10
+                               bg-white/90
+                               rounded-full
+                               text-slate-500">
+
+                        <i class="fa-regular fa-heart"></i>
+
+                    </button>
+
+                </div>
+
+
+                <div class="p-6">
+
+
+                    <div
+                        class="flex
+                               justify-between">
+
+                        <div>
+
+                            <h3
+                                class="text-xl
+                                       font-black">
+
+                                Bakery Collection
+
+                            </h3>
+
+                            <p
+                                class="text-sm
+                                       text-slate-400
+                                       mt-1">
+
+                                Sunrise Bakers
+
+                            </p>
+
+                        </div>
+
+                        <span
+                            class="font-black
+                                   text-orange-500">
+
+                            FREE
+
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="flex gap-4
+                               text-sm
+                               text-slate-400
+                               mt-5">
+
+                        <span>
+                            <i class="fa-solid fa-box mr-1"></i>
+                            26 items
+                        </span>
+
+                        <span>
+                            <i class="fa-solid fa-location-dot mr-1"></i>
+                            2.1 km
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="mt-5
+                               p-3 rounded-xl
+                               bg-emerald-50
+                               dark:bg-emerald-950/30">
+
+                        <div
+                            class="flex
+                                   justify-between
+                                   text-xs">
+
+                            <span
+                                class="text-slate-400">
+
+                                Pickup before
+
+                            </span>
+
+                            <span
+                                class="font-black
+                                       text-emerald-500
+                                       timer"
+                                data-time="7200">
+
+                                02:00:00
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        onclick="reserveFood(this)"
+                        class="w-full mt-5
+                               py-3.5
+                               rounded-xl
+                               bg-orange-500
+                               text-white
+                               font-black">
+
+                        Reserve Food
+
+                    </button>
+
+                </div>
+
+            </article>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     HOW IT WORKS
+========================================================= -->
+
+<section
+    id="how"
+    class="py-24
+           bg-slate-50
+           dark:bg-slate-950">
+
+    <div
+        class="max-w-7xl mx-auto
+               px-5 lg:px-8">
+
+
+        <div
+            class="text-center
+                   max-w-2xl
+                   mx-auto">
+
+            <span
+                class="text-orange-500
+                       text-sm font-black
+                       uppercase tracking-widest">
+
+                Simple process
+
+            </span>
+
+            <h2
+                class="text-4xl
+                       font-black mt-3">
+
+                Rescue food in 3 steps.
+
+            </h2>
+
+            <p
+                class="text-slate-400
+                       mt-4">
+
+                From surplus to impact
+                without unnecessary complexity.
+
+            </p>
+
+        </div>
+
+
+        <div
+            class="grid md:grid-cols-3
+                   gap-8 mt-16">
+
+
+            <div
+                class="text-center">
+
+                <div
+                    class="relative
+                           mx-auto
+                           w-24 h-24
+                           rounded-[2rem]
+                           bg-orange-100
+                           dark:bg-orange-950/40
+                           text-orange-500
+                           flex items-center
+                           justify-center
+                           text-3xl">
+
+                    <i
+                        class="fa-solid
+                               fa-location-dot">
+                    </i>
+
+                    <span
+                        class="absolute
+                               -top-2
+                               -right-2
+                               w-8 h-8
+                               rounded-full
+                               bg-orange-500
+                               text-white
+                               text-sm
+                               flex items-center
+                               justify-center
+                               font-black">
+
+                        1
+
+                    </span>
+
+                </div>
+
+                <h3
+                    class="text-xl
+                           font-black mt-6">
+
+                    Discover
+
+                </h3>
+
+                <p
+                    class="text-slate-400
+                           mt-3">
+
+                    Find surplus food
+                    available near you.
+
+                </p>
+
+            </div>
+
+
+            <div
+                class="text-center">
+
+                <div
+                    class="relative
+                           mx-auto
+                           w-24 h-24
+                           rounded-[2rem]
+                           bg-emerald-100
+                           dark:bg-emerald-950/40
+                           text-emerald-500
+                           flex items-center
+                           justify-center
+                           text-3xl">
+
+                    <i
+                        class="fa-solid
+                               fa-hand">
+                    </i>
+
+                    <span
+                        class="absolute
+                               -top-2
+                               -right-2
+                               w-8 h-8
+                               rounded-full
+                               bg-emerald-500
+                               text-white
+                               text-sm
+                               flex items-center
+                               justify-center
+                               font-black">
+
+                        2
+
+                    </span>
+
+                </div>
+
+                <h3
+                    class="text-xl
+                           font-black mt-6">
+
+                    Reserve
+
+                </h3>
+
+                <p
+                    class="text-slate-400
+                           mt-3">
+
+                    Reserve the food
+                    and receive pickup details.
+
+                </p>
+
+            </div>
+
+
+            <div
+                class="text-center">
+
+                <div
+                    class="relative
+                           mx-auto
+                           w-24 h-24
+                           rounded-[2rem]
+                           bg-purple-100
+                           dark:bg-purple-950/40
+                           text-purple-500
+                           flex items-center
+                           justify-center
+                           text-3xl">
+
+                    <i
+                        class="fa-solid
+                               fa-heart">
+                    </i>
+
+                    <span
+                        class="absolute
+                               -top-2
+                               -right-2
+                               w-8 h-8
+                               rounded-full
+                               bg-purple-500
+                               text-white
+                               text-sm
+                               flex items-center
+                               justify-center
+                               font-black">
+
+                        3
+
+                    </span>
+
+                </div>
+
+                <h3
+                    class="text-xl
+                           font-black mt-6">
+
+                    Make an Impact
+
+                </h3>
+
+                <p
+                    class="text-slate-400
+                           mt-3">
+
+                    Turn a simple meal
+                    into a meaningful action.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     TYPOGRAPHY SECTION
+========================================================= -->
+
+<section
+    class="py-24
+           bg-slate-900
+           text-white">
+
+    <div
+        class="max-w-7xl mx-auto
+               px-5 lg:px-8">
+
+
+        <div
+            class="grid lg:grid-cols-2
+                   gap-16
+                   items-center">
+
+
+            <!-- TYPOGRAPHY PLUGIN -->
+
+            <div>
+
+                <span
+                    class="text-orange-400
+                           text-sm font-black
+                           uppercase tracking-widest">
+
+                    The problem
+
+                </span>
+
+
+                <h2
+                    class="text-4xl
+                           lg:text-5xl
+                           font-black mt-4">
+
+                    Good food deserves
+                    another chance.
+
+                </h2>
+
+
+                <!-- Tailwind Typography -->
+
+                <article
+                    class="prose
+                           prose-lg
+                           prose-invert
+                           mt-7">
+
+                    <p>
+                        Restaurants, events and households
+                        can often have edible food left over
+                        at the end of the day.
+                    </p>
+
+                    <p>
+                        Instead of allowing that food to
+                        become waste, FoodRescue creates a
+                        bridge between surplus food and
+                        communities that can use it.
+                    </p>
+
+                    <blockquote>
+                        Every rescued meal is one less meal
+                        wasted.
+                    </blockquote>
+
+                </article>
+
+
+                <button
+                    onclick="showToast('Thanks for helping build a better food system!')"
+                    class="mt-7
+                           px-6 py-3.5
+                           rounded-xl
+                           bg-orange-500
+                           font-black">
+
+                    Join the movement
+                    <i
+                        class="fa-solid
+                               fa-arrow-right ml-2">
+                    </i>
+
+                </button>
+
+            </div>
+
+
+            <!-- IMPACT -->
+
+            <div
+                id="impact"
+                class="grid grid-cols-2
+                       gap-5">
+
+
+                <div
+                    class="p-7
+                           rounded-3xl
+                           bg-white/5
+                           border border-white/10">
+
+                    <i
+                        class="fa-solid
+                               fa-bowl-food
+                               text-orange-400
+                               text-3xl">
+                    </i>
+
+                    <p
+                        class="text-4xl
+                               font-black mt-6">
+
+                        37
+
+                    </p>
+
+                    <p
+                        class="text-slate-400 mt-2">
+
+                        Meals rescued by you
+
+                    </p>
+
+                </div>
+
+
+                <div
+                    class="p-7
+                           rounded-3xl
+                           bg-white/5
+                           border border-white/10
+                           mt-8">
+
+                    <i
+                        class="fa-solid
+                               fa-recycle
+                               text-emerald-400
+                               text-3xl">
+                    </i>
+
+                    <p
+                        class="text-4xl
+                               font-black mt-6">
+
+                        8.4 kg
+
+                    </p>
+
+                    <p
+                        class="text-slate-400 mt-2">
+
+                        Food waste prevented
+
+                    </p>
+
+                </div>
+
+
+                <div
+                    class="p-7
+                           rounded-3xl
+                           bg-white/5
+                           border border-white/10">
+
+                    <i
+                        class="fa-solid
+                               fa-leaf
+                               text-green-400
+                               text-3xl">
+                    </i>
+
+                    <p
+                        class="text-4xl
+                               font-black mt-6">
+
+                        14.2 kg
+
+                    </p>
+
+                    <p
+                        class="text-slate-400 mt-2">
+
+                        Estimated CO₂ avoided
+
+                    </p>
+
+                </div>
+
+
+                <div
+                    class="p-7
+                           rounded-3xl
+                           bg-white/5
+                           border border-white/10
+                           mt-8">
+
+                    <i
+                        class="fa-solid
+                               fa-heart
+                               text-pink-400
+                               text-3xl">
+                    </i>
+
+                    <p
+                        class="text-4xl
+                               font-black mt-6">
+
+                        21
+
+                    </p>
+
+                    <p
+                        class="text-slate-400 mt-2">
+
+                        People helped
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     CTA
+========================================================= -->
+
+<section
+    class="py-24
+           bg-gradient-to-br
+           from-orange-500
+           to-amber-400
+           text-white">
+
+    <div
+        class="max-w-4xl
+               mx-auto
+               px-5
+               text-center">
+
+
+        <div
+            class="w-20 h-20
+                   mx-auto
+                   rounded-3xl
+                   bg-white/20
+                   flex items-center
+                   justify-center
+                   text-3xl
+                   mb-7
+                   animate-bounce">
+
+            ❤️
+
+        </div>
+
+
+        <h2
+            class="text-4xl
+                   lg:text-6xl
+                   font-black
+                   tracking-tight">
+
+            Don't waste it.
+            <br>
+            Rescue it.
+
+        </h2>
+
+
+        <p
+            class="mt-6
+                   text-orange-100
+                   text-lg
+                   max-w-2xl
+                   mx-auto">
+
+            One restaurant.
+            One volunteer.
+            One meal at a time.
+
+        </p>
+
+
+        <div
+            class="mt-9
+                   flex flex-col
+                   sm:flex-row
+                   justify-center
+                   gap-4">
+
+
+            <button
+                onclick="showToast('Donation form opened!')"
+                class="px-8 py-4
+                       rounded-2xl
+                       bg-white
+                       text-orange-600
+                       font-black
+                       shadow-xl
+                       hover:-translate-y-1
+                       transition">
+
+                <i
+                    class="fa-solid
+                           fa-plus mr-2">
+                </i>
+
+                Share Surplus
+
+            </button>
+
+
+            <button
+                onclick="showToast('Finding the best rescue opportunities for you!')"
+                class="px-8 py-4
+                       rounded-2xl
+                       bg-orange-700
+                       hover:bg-orange-800
+                       font-black
+                       transition">
+
+                <i
+                    class="fa-solid
+                           fa-compass mr-2">
+                </i>
+
+                Explore Rescues
+
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer
+    class="bg-slate-950
+           text-slate-300">
+
+    <div
+        class="max-w-7xl
+               mx-auto
+               px-5 lg:px-8
+               py-16">
+
+
+        <div
+            class="grid md:grid-cols-2
+                   lg:grid-cols-4
+                   gap-12">
+
+
+            <!-- BRAND -->
+
+            <div>
+
+                <div
+                    class="flex items-center
+                           gap-3">
+
+                    <div
+                        class="w-11 h-11
+                               rounded-2xl
+                               bg-orange-500
+                               flex items-center
+                               justify-center
+                               text-white">
+
+                        <i
+                            class="fa-solid
+                                   fa-utensils">
+                        </i>
+
+                    </div>
+
+                    <h2
+                        class="text-xl
+                               font-black
+                               text-white">
+
+                        Food<span
+                            class="text-orange-500">
+
+                            Rescue
+
+                        </span>
+
+                    </h2>
+
+                </div>
+
+
+                <p
+                    class="mt-5
+                           text-sm
+                           leading-relaxed
+                           text-slate-400">
+
+                    A community-powered platform
+                    connecting surplus food with
+                    people who need it.
+
+                </p>
+
+
+                <div
+                    class="flex gap-3 mt-6">
+
+
+                    <a href="#"
+                       class="w-10 h-10
+                              rounded-xl
+                              bg-white/5
+                              flex items-center
+                              justify-center
+                              hover:bg-orange-500
+                              hover:text-white
+                              transition">
+
+                        <i
+                            class="fa-brands
+                                   fa-instagram">
+                        </i>
+
+                    </a>
+
+
+                    <a href="#"
+                       class="w-10 h-10
+                              rounded-xl
+                              bg-white/5
+                              flex items-center
+                              justify-center
+                              hover:bg-orange-500
+                              hover:text-white
+                              transition">
+
+                        <i
+                            class="fa-brands
+                                   fa-linkedin-in">
+                        </i>
+
+                    </a>
+
+
+                    <a href="#"
+                       class="w-10 h-10
+                              rounded-xl
+                              bg-white/5
+                              flex items-center
+                              justify-center
+                              hover:bg-orange-500
+                              hover:text-white
+                              transition">
+
+                        <i
+                            class="fa-brands
+                                   fa-x-twitter">
+                        </i>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- PLATFORM -->
+
+            <div>
+
+                <h3
+                    class="font-black
+                           text-white mb-5">
+
+                    Platform
+
+                </h3>
+
+                <ul
+                    class="space-y-3
+                           text-sm">
+
+                    <li>
+                        <a href="#discover"
+                           class="hover:text-orange-400">
+                            Discover Food
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#map"
+                           class="hover:text-orange-400">
+                            Live Map
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#radar"
+                           class="hover:text-orange-400">
+                            Rescue Radar
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#impact"
+                           class="hover:text-orange-400">
+                            My Impact
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+
+            <!-- COMMUNITY -->
+
+            <div>
+
+                <h3
+                    class="font-black
+                           text-white mb-5">
+
+                    Community
+
+                </h3>
+
+                <ul
+                    class="space-y-3
+                           text-sm">
+
+                    <li>
+                        <a href="#"
+                           class="hover:text-orange-400">
+                            Become a Donor
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#"
+                           class="hover:text-orange-400">
+                            Become a Rescuer
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#"
+                           class="hover:text-orange-400">
+                            NGO Partners
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#"
+                           class="hover:text-orange-400">
+                            Community Stories
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+
+            <!-- NEWSLETTER -->
+
+            <div>
+
+                <h3
+                    class="font-black
+                           text-white mb-5">
+
+                    Stay Connected
+
+                </h3>
+
+                <p
+                    class="text-sm
+                           text-slate-400">
+
+                    Get updates about
+                    food rescues and impact.
+
+                </p>
+
+
+                <div
+                    class="flex mt-5">
+
+                    <input
+                        type="email"
+                        placeholder="Your email"
+                        class="min-w-0
+                               flex-1
+                               bg-white/5
+                               border
+                               border-white/10
+                               px-4 py-3
+                               rounded-l-xl
+                               outline-none
+                               focus:border-orange-500">
+
+
+                    <button
+                        onclick="showToast('Thanks! You are on the FoodRescue list.')"
+                        class="px-4
+                               bg-orange-500
+                               rounded-r-xl
+                               hover:bg-orange-600">
+
+                        <i
+                            class="fa-solid
+                                   fa-arrow-right">
+                        </i>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- BOTTOM -->
+
+        <div
+            class="border-t
+                   border-white/10
+                   mt-14
+                   pt-7
+                   flex flex-col
+                   md:flex-row
+                   justify-between
+                   gap-4
+                   text-xs
+                   text-slate-500">
+
+            <p>
+
+                © 2026 FoodRescue.
+                Turning surplus into impact.
+
+            </p>
+
+            <div
+                class="flex gap-5">
+
+                <a href="#"
+                   class="hover:text-white">
+
+                    Privacy
+
+                </a>
+
+                <a href="#"
+                   class="hover:text-white">
+
+                    Terms
+
+                </a>
+
+                <a href="#"
+                   class="hover:text-white">
+
+                    Accessibility
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+
+<!-- =========================================================
+     TOAST
+========================================================= -->
+
+<div
+    id="toast"
+    class="fixed
+           bottom-6
+           right-6
+           z-[100]
+           max-w-sm
+           bg-slate-900
+           text-white
+           px-5 py-4
+           rounded-2xl
+           shadow-2xl
+           border
+           border-white/10">
+
+    <div
+        class="flex
+               items-center
+               gap-3">
+
+        <div
+            class="w-9 h-9
+                   rounded-xl
+                   bg-orange-500
+                   flex items-center
+                   justify-center">
+
+            <i
+                class="fa-solid
+                       fa-check">
+            </i>
+
+        </div>
+
+        <p
+            id="toastText"
+            class="text-sm
+                   font-bold">
+
+        </p>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script>
+
+
+/* =========================================================
+   THEME
+========================================================= */
+
+const themeToggle =
+    document.getElementById("themeToggle");
+
+const themeIcon =
+    document.getElementById("themeIcon");
+
+
+function updateThemeIcon() {
+
+    if (document.documentElement.classList.contains("dark")) {
+
+        themeIcon.className =
+            "fa-solid fa-sun";
+
+    } else {
+
+        themeIcon.className =
+            "fa-solid fa-moon";
+
+    }
+
+}
+
+
+if (
+    localStorage.getItem("foodrescue-theme") === "dark"
+) {
+
+    document.documentElement.classList.add("dark");
+
+}
+
+updateThemeIcon();
+
+
+themeToggle.addEventListener("click", () => {
+
+    document.documentElement.classList.toggle("dark");
+
+    const dark =
+        document.documentElement.classList.contains("dark");
+
+    localStorage.setItem(
+        "foodrescue-theme",
+        dark ? "dark" : "light"
+    );
+
+    updateThemeIcon();
+
+    showToast(
+        dark
+            ? "Dark mode enabled 🌙"
+            : "Light mode enabled ☀️"
+    );
+
+});
+
+
+
+/* =========================================================
+   MOBILE MENU
+========================================================= */
+
+const menuBtn =
+    document.getElementById("menuBtn");
+
+const mobileMenu =
+    document.getElementById("mobileMenu");
+
+
+menuBtn.addEventListener("click", () => {
+
+    mobileMenu.classList.toggle("hidden");
+
+    const icon =
+        menuBtn.querySelector("i");
+
+    icon.classList.toggle("fa-bars");
+    icon.classList.toggle("fa-xmark");
+
+});
+
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+let toastTimeout;
+
+
+function showToast(message) {
+
+    const toast =
+        document.getElementById("toast");
+
+    const text =
+        document.getElementById("toastText");
+
+    text.innerText = message;
+
+    toast.classList.add("show");
+
+    clearTimeout(toastTimeout);
+
+    toastTimeout =
+        setTimeout(() => {
+
+            toast.classList.remove("show");
+
+        }, 3000);
+
+}
+
+
+
+/* =========================================================
+   ROLE SELECTOR
+========================================================= */
+
+function selectRole(role) {
+
+    const buttons =
+        document.querySelectorAll(".role-btn");
+
+    buttons.forEach(button => {
+
+        button.classList.remove(
+            "border-orange-500",
+            "bg-orange-50",
+            "dark:bg-orange-950/30"
+        );
+
+        button.classList.add(
+            "border-slate-200"
+        );
+
+    });
+
+
+    event.currentTarget.classList.remove(
+        "border-slate-200"
+    );
+
+    event.currentTarget.classList.add(
+        "border-orange-500",
+        "bg-orange-50",
+        "dark:bg-orange-950/30"
+    );
+
+
+    showToast(
+        "Role selected: " + role
+    );
+
+}
+
+
+
+/* =========================================================
+   HEART
+========================================================= */
+
+function toggleHeart(button) {
+
+    const icon =
+        button.querySelector("i");
+
+    icon.classList.toggle("fa-regular");
+    icon.classList.toggle("fa-solid");
+
+    button.classList.toggle("text-red-500");
+
+    showToast(
+        icon.classList.contains("fa-solid")
+            ? "Added to your favorites ❤️"
+            : "Removed from favorites"
+    );
+
+}
+
+
+
+/* =========================================================
+   RESERVE
+========================================================= */
+
+function reserveFood(button) {
+
+    button.innerHTML =
+        '<i class="fa-solid fa-check mr-2"></i> Reserved!';
+
+    button.classList.remove(
+        "bg-orange-500"
+    );
+
+    button.classList.add(
+        "bg-emerald-500"
+    );
+
+    showToast(
+        "Food reserved! Pickup details are ready."
+    );
+
+}
+
+
+
+/* =========================================================
+   COUNTDOWN TIMERS
+========================================================= */
+
+const timers =
+    document.querySelectorAll(".timer");
+
+
+timers.forEach(timer => {
+
+    let seconds =
+        parseInt(
+            timer.dataset.time
+        );
+
+
+    setInterval(() => {
+
+        if (seconds <= 0) {
+
+            timer.innerText =
+                "EXPIRED";
+
+            timer.classList.remove(
+                "text-orange-500"
+            );
+
+            timer.classList.add(
+                "text-red-500"
+            );
+
+            return;
+
+        }
+
+
+        seconds--;
+
+
+        const hours =
+            Math.floor(
+                seconds / 3600
+            );
+
+        const minutes =
+            Math.floor(
+                (seconds % 3600) / 60
+            );
+
+        const secs =
+            seconds % 60;
+
+
+        timer.innerText =
+            String(hours).padStart(2, "0")
+            + ":" +
+            String(minutes).padStart(2, "0")
+            + ":" +
+            String(secs).padStart(2, "0");
+
+
+        if (seconds < 900) {
+
+            timer.classList.remove(
+                "text-orange-500"
+            );
+
+            timer.classList.add(
+                "text-red-500"
+            );
+
+        }
+
+    }, 1000);
+
+});
+
+
+
+/* =========================================================
+   COUNTERS
+========================================================= */
+
+const counters =
+    document.querySelectorAll(".counter");
+
+
+counters.forEach(counter => {
+
+    const target =
+        parseInt(
+            counter.dataset.target
+        );
+
+    let current = 0;
+
+    const increment =
+        target / 100;
+
+
+    const updateCounter = () => {
+
+        current += increment;
+
+        if (current < target) {
+
+            counter.innerText =
+                Math.floor(current)
+                .toLocaleString();
+
+            requestAnimationFrame(
+                updateCounter
+            );
+
+        } else {
+
+            counter.innerText =
+                target.toLocaleString()
+                + "+";
+
+        }
+
+    };
+
+
+    updateCounter();
+
+});
+
+
+
+/* =========================================================
+   KEYBOARD SHORTCUT
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key.toLowerCase() === "d"
+            &&
+            event.ctrlKey
+        ) {
+
+            themeToggle.click();
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+
+</html>
