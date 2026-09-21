@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="FoodRescue 2.0 - HTML5 API powered surplus food rescue platform">
+<title>FoodRescue 2.0</title>
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<script>
+tailwind.config={darkMode:"class",theme:{extend:{colors:{rescue:{500:"#f97316",600:"#ea580c"}}}}};
+</script>
+<style>
+html{scroll-behavior:smooth}body{font-family:Inter,system-ui,sans-serif}
+.glass{background:rgba(255,255,255,.75);backdrop-filter:blur(18px);border:1px solid rgba(226,232,240,.7)}
+.dark .glass{background:rgba(15,23,42,.75);border-color:rgba(148,163,184,.15)}
+.gradient-text{background:linear-gradient(90deg,#f97316,#f59e0b,#10b981);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-grid{background-image:linear-gradient(rgba(249,115,22,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(249,115,22,.05) 1px,transparent 1px);background-size:32px 32px}
+.food-card{transition:.2s}.food-card:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(15,23,42,.12)}
+.toast{transform:translateY(120px);opacity:0;transition:.3s}.toast.show{transform:translateY(0);opacity:1}
+.modal-hidden{opacity:0;pointer-events:none}.modal-visible{opacity:1;pointer-events:auto}
+</style>
+</head>
+
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors">
+
+<header class="sticky top-0 z-50 glass border-b border-slate-200 dark:border-slate-800">
+<nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="h-16 flex items-center justify-between">
+<a href="#home" class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-2xl bg-orange-500 text-white flex items-center justify-center shadow-lg"><i class="fa-solid fa-hand-holding-heart"></i></div>
+<div><b class="text-lg">Food<span class="text-orange-500">Rescue</span></b><div class="text-[9px] uppercase tracking-[.2em] text-slate-500">Rescue More. Waste Less.</div></div>
+</a>
+<div class="hidden lg:flex gap-7 text-sm font-semibold">
+<a href="#home" class="hover:text-orange-500">Home</a><a href="#nearby" class="hover:text-orange-500">Nearby Food</a><a href="#donate" class="hover:text-orange-500">Donate</a><a href="#rescues" class="hover:text-orange-500">My Rescues</a><a href="#guide" class="hover:text-orange-500">How It Works</a>
+</div>
+<div class="flex gap-2">
+<button id="themeBtn" class="w-10 h-10 rounded-xl border border-slate-200 dark:border-slate-700"><i id="themeIcon" class="fa-solid fa-moon"></i></button>
+<button id="menuBtn" class="lg:hidden w-10 h-10 rounded-xl border border-slate-200 dark:border-slate-700"><i class="fa-solid fa-bars"></i></button>
+</div>
+</div>
+<div id="mobileMenu" class="hidden lg:hidden pb-4 grid gap-2 text-sm font-semibold">
+<a href="#home" class="p-3">Home</a><a href="#nearby" class="p-3">Nearby Food</a><a href="#donate" class="p-3">Donate</a><a href="#rescues" class="p-3">My Rescues</a><a href="#guide" class="p-3">How It Works</a>
+</div>
+</nav>
+</header>
+
+<main>
+<section id="home" class="hero-grid overflow-hidden">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+<div class="grid lg:grid-cols-[1.1fr_.9fr] gap-12 items-center">
+<div>
+<span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-orange-100 dark:bg-orange-500/10 text-orange-700 dark:text-orange-300 text-xs font-bold uppercase">● HTML5 API Powered Platform</span>
+<h1 class="mt-6 text-5xl sm:text-6xl lg:text-7xl font-black leading-[.98]">Turn surplus food into <span class="gradient-text">shared meals.</span></h1>
+<p class="mt-6 text-lg leading-8 text-slate-600 dark:text-slate-300 max-w-2xl">FoodRescue connects food donors with nearby rescuers and community organizations so good food can reach people instead of becoming waste.</p>
+<div class="mt-8 flex flex-col sm:flex-row gap-3">
+<button id="heroLocation" class="px-6 py-3.5 rounded-2xl bg-slate-950 dark:bg-white text-white dark:text-slate-950 font-bold"><i class="fa-solid fa-location-crosshairs mr-2"></i>Find Food Near Me</button>
+<a href="#donate" class="px-6 py-3.5 rounded-2xl bg-orange-500 text-white font-bold text-center"><i class="fa-solid fa-plus mr-2"></i>Donate Surplus Food</a>
+</div>
+<div class="mt-8 flex flex-wrap gap-2 text-xs font-semibold">
+<span class="px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">📍 Geolocation</span>
+<span class="px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">💾 Local Storage</span>
+<span class="px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">🔔 Notifications</span>
+</div>
+</div>
+<div class="glass rounded-[2rem] p-5 shadow-2xl">
+<div class="flex justify-between items-center mb-5"><div><div class="text-xs uppercase tracking-widest text-slate-500">Live Network</div><b class="text-xl">Food Rescue Radar</b></div><span class="text-xs font-bold text-emerald-600">● ACTIVE</span></div>
+<div class="rounded-3xl bg-slate-900 p-5 text-white">
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-white/10 rounded-2xl p-4"><small class="text-slate-400">Active Donations</small><div class="text-3xl font-black">18</div></div>
+<div class="bg-white/10 rounded-2xl p-4"><small class="text-slate-400">Meals Available</small><div class="text-3xl font-black">246</div></div>
+<div class="bg-white/10 rounded-2xl p-4"><small class="text-slate-400">Active Rescues</small><div class="text-3xl font-black">07</div></div>
+<div class="bg-white/10 rounded-2xl p-4"><small class="text-slate-400">Meals Rescued</small><div class="text-3xl font-black">12.8K</div></div>
+</div>
+<div class="mt-4 p-4 bg-white/10 rounded-2xl"><div class="flex justify-between text-sm"><b>Network status</b><span class="text-emerald-300">Healthy</span></div><div class="mt-3 h-2 bg-white/10 rounded-full"><div class="h-full w-[82%] bg-gradient-to-r from-orange-400 to-emerald-400 rounded-full"></div></div></div>
+</div>
+</div>
+</div></div>
+</section>
+
+<section id="nearby" class="py-16 lg:py-20">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex flex-col lg:flex-row lg:justify-between gap-5">
+<div><div class="text-orange-500 text-sm font-black uppercase tracking-widest">Geolocation API</div><h2 class="mt-2 text-3xl sm:text-4xl font-black">Find nearby food rescue opportunities</h2><p class="mt-3 max-w-2xl text-slate-600 dark:text-slate-400">Use your browser location to calculate distance from available donation points.</p></div>
+<button id="locationBtn" class="h-fit px-5 py-3 rounded-2xl bg-orange-500 hover:bg-orange-600 text-white font-bold"><i class="fa-solid fa-location-crosshairs mr-2"></i>Detect My Location</button>
+</div>
+<div class="mt-8 grid lg:grid-cols-[.75fr_1.25fr] gap-6">
+<div class="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6">
+<div class="flex gap-3 items-center"><div class="w-12 h-12 rounded-2xl bg-orange-100 dark:bg-orange-500/10 text-orange-600 flex items-center justify-center"><i class="fa-solid fa-map-location-dot"></i></div><div><b>Your Location</b><div class="text-xs text-slate-500">Browser Geolocation API</div></div></div>
+<div class="mt-6 space-y-3 text-sm">
+<div class="flex justify-between p-4 rounded-2xl bg-slate-50 dark:bg-slate-950"><span class="text-slate-500">Latitude</span><strong id="lat">Not detected</strong></div>
+<div class="flex justify-between p-4 rounded-2xl bg-slate-50 dark:bg-slate-950"><span class="text-slate-500">Longitude</span><strong id="lng">Not detected</strong></div>
+<div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950"><small class="text-slate-500">Status</small><div id="locStatus" class="font-bold mt-1">Click Detect My Location.</div></div>
+</div>
+<p class="mt-5 text-xs text-slate-500">Location permission is requested only after the button is pressed.</p>
+</div>
+<div id="nearbyGrid" class="grid sm:grid-cols-2 gap-4"></div>
+</div>
+</div>
+</section>
+
+<section id="donate" class="py-16 lg:py-20 bg-white dark:bg-slate-900/60 border-y border-slate-200 dark:border-slate-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="max-w-3xl"><div class="text-emerald-500 text-sm font-black uppercase tracking-widest">File API + Local Storage</div><h2 class="mt-2 text-3xl sm:text-4xl font-black">Create a food donation</h2><p class="mt-3 text-slate-600 dark:text-slate-400">Donors can enter food details and upload a photo. The File API previews the image before publishing.</p></div>
+<div class="mt-8 grid lg:grid-cols-[1fr_.8fr] gap-6">
+<form id="donationForm" class="rounded-3xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-6">
+<div class="grid sm:grid-cols-2 gap-5">
+<div class="sm:col-span-2"><label class="block text-sm font-bold mb-2">Food name</label><input id="foodName" required placeholder="Vegetable Biryani" class="input"></div>
+<div><label class="block text-sm font-bold mb-2">Quantity / meals</label><input id="quantity" required min="1" type="number" placeholder="25" class="input"></div>
+<div><label class="block text-sm font-bold mb-2">Category</label><select id="category" class="input"><option>Cooked Food</option><option>Packaged Food</option><option>Bakery</option><option>Fruits & Vegetables</option><option>Other</option></select></div>
+<div><label class="block text-sm font-bold mb-2">Pickup time</label><input id="pickupTime" required type="time" class="input"></div>
+<div><label class="block text-sm font-bold mb-2">Donor / organization</label><input id="donor" placeholder="Green Leaf Kitchen" class="input"></div>
+<div class="sm:col-span-2"><label class="block text-sm font-bold mb-2">Description</label><textarea id="description" rows="3" placeholder="Freshly prepared food..." class="input"></textarea></div>
+<div class="sm:col-span-2"><label class="block text-sm font-bold mb-2">Food image</label><input id="foodImage" accept="image/*" type="file" class="w-full text-sm text-slate-500"><p id="fileInfo" class="mt-2 text-xs text-slate-500">No image selected.</p></div>
+</div>
+<button class="mt-6 w-full py-3.5 rounded-2xl bg-orange-500 hover:bg-orange-600 text-white font-black"><i class="fa-solid fa-bowl-food mr-2"></i>Publish Donation</button>
+</form>
+<div class="rounded-3xl bg-slate-950 text-white p-6">
+<div class="text-xs uppercase tracking-widest text-orange-300">Image Preview</div><h3 class="mt-2 text-2xl font-black">Donation preview</h3>
+<div class="mt-6 aspect-[4/3] rounded-3xl bg-white/5 border border-white/10 overflow-hidden flex items-center justify-center"><img id="preview" class="hidden w-full h-full object-cover"><div id="placeholder" class="text-center"><i class="fa-solid fa-image text-4xl text-orange-300"></i><p class="mt-3 font-bold">Upload a food image</p><p class="text-sm text-slate-400">File API preview</p></div></div>
+<div class="mt-5 p-4 rounded-2xl bg-white/5"><small class="text-slate-400">Stored donations</small><div id="donationCount" class="text-2xl font-black">0</div></div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="rescues" class="py-16 lg:py-20">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex flex-col md:flex-row md:justify-between gap-4">
+<div><div class="text-amber-500 text-sm font-black uppercase tracking-widest">Clipboard + Notifications</div><h2 class="mt-2 text-3xl sm:text-4xl font-black">Rescue dashboard</h2><p class="mt-3 text-slate-600 dark:text-slate-400">Reserve food, copy pickup details and receive browser notifications.</p></div>
+<button id="notifyBtn" class="h-fit px-5 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 font-bold"><i class="fa-solid fa-bell text-amber-500 mr-2"></i>Enable Notifications</button>
+</div>
+<div id="rescueGrid" class="mt-8 grid md:grid-cols-2 xl:grid-cols-4 gap-5"></div>
+<div id="activeRescue" class="hidden mt-6 rounded-3xl border border-emerald-200 bg-emerald-50 dark:bg-emerald-950/20 p-5">
+<div class="flex gap-4 items-center"><div class="w-11 h-11 rounded-2xl bg-emerald-500 text-white flex items-center justify-center"><i class="fa-solid fa-check"></i></div><div class="flex-1"><b>Active rescue</b><div id="activeText" class="text-sm text-slate-600 dark:text-slate-300"></div></div><button id="copyActive" class="px-4 py-2 rounded-xl bg-white dark:bg-slate-900 border font-bold">Copy</button></div>
+</div>
+</div>
+</section>
+
+<section id="guide" class="py-16 lg:py-20 bg-slate-950 text-white">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div><div class="text-orange-300 text-sm font-black uppercase tracking-widest">HTML5 Audio + Video</div><h2 class="mt-2 text-3xl sm:text-4xl font-black">Understand the rescue process</h2><p class="mt-3 text-slate-400">Media is used for onboarding and rescue alerts.</p></div>
+<div class="mt-8 grid lg:grid-cols-2 gap-6">
+<article class="rounded-3xl bg-white/5 border border-white/10 p-5"><h3 class="font-black text-xl"><i class="fa-solid fa-video text-orange-300 mr-2"></i>How FoodRescue Works</h3><p class="text-xs text-slate-400 mt-1">HTML5 Video</p><video controls preload="metadata" class="mt-5 w-full aspect-video rounded-2xl bg-black"><source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">Your browser does not support video.</video><p class="mt-4 text-sm text-slate-400">In production this can be replaced with the project's own onboarding or food-safety video.</p></article>
+<article class="rounded-3xl bg-white/5 border border-white/10 p-5"><h3 class="font-black text-xl"><i class="fa-solid fa-volume-high text-emerald-300 mr-2"></i>Rescue Alert Sound</h3><p class="text-xs text-slate-400 mt-1">HTML5 Audio</p><audio id="audio" controls class="mt-6 w-full"><source src="https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3" type="audio/mpeg">Your browser does not support audio.</audio><button id="testAudio" class="mt-5 px-5 py-3 rounded-xl bg-emerald-500 font-bold">Test Rescue Alert</button></article>
+</div>
+</div>
+</section>
+
+<section class="py-16 lg:py-20">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid lg:grid-cols-[.8fr_1.2fr] gap-6 items-start">
+<div><div class="text-purple-500 text-sm font-black uppercase tracking-widest">Local Storage API</div><h2 class="mt-2 text-3xl sm:text-4xl font-black">Remember the user experience</h2><p class="mt-3 text-slate-600 dark:text-slate-400">Store lightweight role and food preferences in the browser.</p></div>
+<div class="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6">
+<div class="grid md:grid-cols-2 gap-5">
+<div><label class="block text-sm font-bold mb-2">Your role</label><select id="role" class="input"><option>Donor</option><option>Rescuer</option><option>NGO / Community Organization</option></select></div>
+<div><label class="block text-sm font-bold mb-2">Preferred food</label><select id="preferred" class="input"><option>Any Food</option><option>Cooked Food</option><option>Packaged Food</option><option>Bakery</option><option>Fruits & Vegetables</option></select></div>
+</div>
+<div class="mt-5 flex flex-wrap gap-3"><button id="savePrefs" class="px-5 py-3 rounded-2xl bg-purple-600 text-white font-bold">Save Preferences</button><button id="clearData" class="px-5 py-3 rounded-2xl border font-bold">Clear Saved Data</button></div>
+<pre id="storagePreview" class="mt-5 p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 text-xs whitespace-pre-wrap overflow-auto">No saved data.</pre>
+</div>
+</div>
+</div>
+</section>
+</main>
+
+<footer class="border-t border-slate-200 dark:border-slate-800 py-10 bg-white dark:bg-slate-900">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between gap-5">
+<div><b class="text-lg">Food<span class="text-orange-500">Rescue</span> 2.0</b><p class="text-sm text-slate-500 mt-2">A domain-focused HTML5 API implementation for surplus food redistribution.</p></div>
+<div class="text-sm text-slate-500">Exercise 2 • HTML5 APIs • 2026</div>
+</div>
+</footer>
+
+<div id="toast" class="toast fixed bottom-5 right-5 z-[100] max-w-sm w-[calc(100%-2rem)]"><div class="rounded-2xl bg-slate-950 text-white p-4 shadow-2xl"><b id="toastTitle">Success</b><p id="toastMsg" class="text-sm text-slate-300 mt-1"></p></div></div>
+
+<div id="modal" class="modal-hidden fixed inset-0 z-[90] bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
+<div class="w-full max-w-lg rounded-3xl bg-white dark:bg-slate-900 p-6 shadow-2xl">
+<div class="flex justify-between items-center"><div><small class="text-orange-500 font-black uppercase">Confirm Rescue</small><h3 id="modalName" class="text-2xl font-black"></h3></div><button id="closeModal" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800"><i class="fa-solid fa-xmark"></i></button></div>
+<div id="modalDetails" class="mt-5 space-y-2 text-sm"></div>
+<div class="mt-6 flex gap-3"><button id="confirmRescue" class="flex-1 py-3 rounded-2xl bg-orange-500 text-white font-black">Confirm Rescue</button><button id="cancelRescue" class="flex-1 py-3 rounded-2xl border font-bold">Cancel</button></div>
+</div>
+</div>
+
+<script>
+const KEY="foodrescue_ex2";
+const donations=[
+{id:1,name:"Vegetable Biryani",donor:"Green Leaf Kitchen",category:"Cooked Food",meals:25,pickup:"7:00 PM - 8:00 PM",lat:23.0225,lng:72.5714,icon:"fa-bowl-food"},
+{id:2,name:"Fresh Meal Boxes",donor:"Community Café",category:"Cooked Food",meals:18,pickup:"7:30 PM - 8:30 PM",lat:23.0325,lng:72.5814,icon:"fa-box-open"},
+{id:3,name:"Bakery Surplus",donor:"Sunrise Bakers",category:"Bakery",meals:30,pickup:"8:00 PM - 9:00 PM",lat:23.0125,lng:72.5614,icon:"fa-bread-slice"},
+{id:4,name:"Fruit & Vegetable Pack",donor:"FreshMart",category:"Fruits & Vegetables",meals:15,pickup:"6:30 PM - 7:30 PM",lat:23.0425,lng:72.5914,icon:"fa-carrot"}
+];
+let selected=null,userPos=null;
+const $=id=>document.getElementById(id);
+
+document.querySelectorAll(".input").forEach(e=>e.className+=" w-full px-4 py-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 outline-none focus:ring-2 focus:ring-orange-500");
+
+function getData(){try{return JSON.parse(localStorage.getItem(KEY))||{preferences:{},donations:[],activeRescue:null,theme:"light"}}catch{return{preferences:{},donations:[],activeRescue:null,theme:"light"}}}
+function saveData(d){localStorage.setItem(KEY,JSON.stringify(d));updateStorage()}
+function toast(t,m){$("toastTitle").textContent=t;$("toastMsg").textContent=m;$("toast").classList.add("show");clearTimeout(window.tt);window.tt=setTimeout(()=>$("toast").classList.remove("show"),4000)}
+function updateStorage(){
+ const d=getData();$("donationCount").textContent=d.donations.length;
+ $("storagePreview").textContent=JSON.stringify(d,null,2);
+ if(d.preferences.role)$("role").value=d.preferences.role;
+ if(d.preferences.preferred)$("preferred").value=d.preferences.preferred;
+ if(d.activeRescue){$("activeRescue").classList.remove("hidden");$("activeText").textContent=`${d.activeRescue.name} • ${d.activeRescue.meals} meals • Pickup ${d.activeRescue.pickup}`}else $("activeRescue").classList.add("hidden");
+}
+function applyTheme(){const d=getData();document.documentElement.classList.toggle("dark",d.theme==="dark");$("themeIcon").className=d.theme==="dark"?"fa-solid fa-sun":"fa-solid fa-moon"}
+$("themeBtn").onclick=()=>{let d=getData();d.theme=d.theme==="dark"?"light":"dark";saveData(d);applyTheme()}
+$("menuBtn").onclick=()=>$("mobileMenu").classList.toggle("hidden");
+document.querySelectorAll("#mobileMenu a").forEach(a=>a.onclick=()=>$("mobileMenu").classList.add("hidden"));
+
+function distance(a,b,c,d){const R=6371,x=(c-a)*Math.PI/180,y=(d-b)*Math.PI/180;const q=Math.sin(x/2)**2+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(y/2)**2;return R*2*Math.atan2(Math.sqrt(q),Math.sqrt(1-q))}
+function renderNearby(){
+ let arr=[...donations];if(userPos)arr=arr.map(x=>({...x,dist:distance(userPos.lat,userPos.lng,x.lat,x.lng)})).sort((a,b)=>a.dist-b.dist);
+ $("nearbyGrid").innerHTML=arr.map(x=>`<article class="food-card rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5"><div class="flex justify-between"><div class="w-12 h-12 rounded-2xl bg-orange-100 dark:bg-orange-500/10 text-orange-600 flex items-center justify-center"><i class="fa-solid ${x.icon}"></i></div><span class="text-xs font-bold text-emerald-600">${userPos?`${x.dist.toFixed(1)} km away`:"Nearby demo"}</span></div><h3 class="mt-5 font-black text-lg">${x.name}</h3><p class="text-sm text-slate-500">${x.donor}</p><div class="mt-4 grid grid-cols-2 gap-2 text-xs"><div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950"><small>Meals</small><b class="block">${x.meals}</b></div><div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950"><small>Pickup</small><b class="block">${x.pickup.split(" - ")[0]}</b></div></div><button onclick="openRescue(${x.id})" class="mt-4 w-full py-3 rounded-xl border border-orange-200 text-orange-600 font-bold">View Rescue</button></article>`).join("")
+}
+function locate(){
+ if(!navigator.geolocation){$("locStatus").textContent="Geolocation is not supported.";return}
+ $("locStatus").textContent="Requesting location permission...";
+ navigator.geolocation.getCurrentPosition(p=>{userPos={lat:p.coords.latitude,lng:p.coords.longitude};$("lat").textContent=userPos.lat.toFixed(6);$("lng").textContent=userPos.lng.toFixed(6);$("locStatus").textContent="Location detected. Nearby distances updated.";renderNearby();toast("Location detected","Nearby rescue distances have been updated.")},e=>{$("locStatus").textContent=e.code===1?"Permission denied. Please allow location access.":"Unable to retrieve your location.";toast("Location unavailable",$("locStatus").textContent)});
+}
+$("locationBtn").onclick=locate;
+$("heroLocation").onclick=()=>{document.querySelector("#nearby").scrollIntoView({behavior:"smooth"});setTimeout(locate,500)};
+
+$("foodImage").onchange=e=>{
+ const f=e.target.files[0];if(!f)return;
+ if(!f.type.startsWith("image/")){toast("Invalid file","Please choose an image.");return}
+ $("fileInfo").textContent=`${f.name} • ${(f.size/1024).toFixed(1)} KB`;
+ const r=new FileReader();r.onload=x=>{$("preview").src=x.target.result;$("preview").classList.remove("hidden");$("placeholder").classList.add("hidden")};r.readAsDataURL(f)
+};
+$("donationForm").onsubmit=e=>{
+ e.preventDefault();let d=getData(),f=$("foodImage").files[0];
+ d.donations.push({id:Date.now(),name:$("foodName").value,quantity:$("quantity").value,category:$("category").value,pickupTime:$("pickupTime").value,donor:$("donor").value||"Community Donor",description:$("description").value,image:f?f.name:null,createdAt:new Date().toLocaleString()});
+ saveData(d);e.target.reset();$("preview").classList.add("hidden");$("placeholder").classList.remove("hidden");$("fileInfo").textContent="No image selected.";toast("Donation published","The donation was saved locally.")
+};
+
+async function enableNotifications(){
+ if(!("Notification"in window)){toast("Unavailable","This browser does not support notifications.");return}
+ const p=await Notification.requestPermission();if(p==="granted"){new Notification("FoodRescue",{body:"Rescue notifications are enabled."});toast("Notifications enabled","Browser alerts are now available.")}else toast("Not enabled","Browser permission was not granted.")
+}
+$("notifyBtn").onclick=enableNotifications;
+async function copyText(text){
+ try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(text);return true}const t=document.createElement("textarea");t.value=text;document.body.appendChild(t);t.select();let ok=document.execCommand("copy");t.remove();return ok}catch{return false}
+}
+function rescueText(r){return `FoodRescue Pickup\n\nFood: ${r.name}\nDonor: ${r.donor}\nQuantity: ${r.meals} meals\nPickup: ${r.pickup}\nStatus: Rescue confirmed`}
+async function copyRescue(id){const x=donations.find(d=>d.id===id);if(await copyText(rescueText(x)))toast("Copied","Pickup details copied to clipboard.");else toast("Copy failed","Clipboard access was blocked.")}
+
+$("copyActive").onclick=async()=>{const d=getData();if(d.activeRescue&&await copyText(rescueText(d.activeRescue)))toast("Copied","Active rescue details copied.")};
+
+function renderRescues(){
+ $("rescueGrid").innerHTML=donations.map(x=>`<article class="food-card rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5"><div class="flex justify-between"><div><small class="text-slate-400 uppercase">${x.category}</small><h3 class="text-xl font-black">${x.name}</h3></div><div class="w-11 h-11 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center"><i class="fa-solid ${x.icon}"></i></div></div><div class="mt-5 space-y-2 text-sm"><div>🏪 ${x.donor}</div><div>👥 ${x.meals} meals</div><div>🕒 ${x.pickup}</div></div><div class="mt-5 grid grid-cols-2 gap-2"><button onclick="openRescue(${x.id})" class="py-3 rounded-xl bg-orange-500 text-white font-bold">Reserve</button><button onclick="copyRescue(${x.id})" class="py-3 rounded-xl border font-bold">Copy</button></div></article>`).join("")
+}
+window.openRescue=id=>{
+ selected=donations.find(x=>x.id===id);if(!selected)return;
+ $("modalName").textContent=selected.name;$("modalDetails").innerHTML=`<div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 flex justify-between"><span>Donor</span><b>${selected.donor}</b></div><div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 flex justify-between"><span>Meals</span><b>${selected.meals}</b></div><div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 flex justify-between"><span>Pickup</span><b>${selected.pickup}</b></div>`;$("modal").classList.remove("modal-hidden");$("modal").classList.add("modal-visible")
+}
+function closeModal(){$("modal").classList.remove("modal-visible");$("modal").classList.add("modal-hidden");selected=null}
+$("closeModal").onclick=closeModal;$("cancelRescue").onclick=closeModal;
+$("confirmRescue").onclick=()=>{
+ if(!selected)return;let d=getData();d.activeRescue={id:selected.id,name:selected.name,donor:selected.donor,meals:selected.meals,pickup:selected.pickup};saveData(d);closeModal();
+ if("Notification"in window&&Notification.permission==="granted")new Notification("FoodRescue • Rescue confirmed",{body:`${selected.name} has been added to your active rescue.`});
+ $("audio").play().catch(()=>{});toast("Rescue confirmed",`${selected.name} is now your active rescue.`);document.querySelector("#rescues").scrollIntoView({behavior:"smooth"})
+};
+$("modal").onclick=e=>{if(e.target===$("modal"))closeModal()};
+
+$("savePrefs").onclick=()=>{let d=getData();d.preferences={role:$("role").value,preferred:$("preferred").value,updatedAt:new Date().toLocaleString()};saveData(d);toast("Preferences saved","FoodRescue will remember them in this browser.")};
+$("clearData").onclick=()=>{if(confirm("Clear all FoodRescue demo data from local storage?")){localStorage.removeItem(KEY);updateStorage();applyTheme();toast("Data cleared","Local demo data was removed.")}};
+$("testAudio").onclick=()=>{$("audio").play().then(()=>toast("Audio playing","HTML5 Audio is working.")).catch(()=>toast("Play manually","The browser blocked automatic playback."))};
+
+applyTheme();updateStorage();renderNearby();renderRescues();
+</script>
+</body>
+</html>
